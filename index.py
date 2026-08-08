@@ -1,9 +1,10 @@
+import flask
 from flask import Flask, render_template_string, request, jsonify, redirect, send_from_directory
 import json, os, random
 from datetime import datetime
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__)
+app = flask.Flask(__name__)
 app.config['UPLOAD_FOLDER'] = 'uploads'
 os.makedirs('uploads', exist_ok=True)
 
