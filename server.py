@@ -85,7 +85,9 @@ WELCOME = """
     </script>
 </body>
 </html>
-"""HTML = r"""
+"""
+
+HTML = r"""
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -200,7 +202,9 @@ WELCOME = """
     </script>
 </body>
 </html>
-"""VISA = """
+"""
+
+VISA = """
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -238,31 +242,10 @@ WELCOME = """
             <h1>Visa Cards</h1>
             <p style="color:#8b949e;font-size:1.2em;">بطاقات فيزا للشراء أونلاين</p>
         </div>
-        
-        <div class="card-visa">
-            <h2>💳 بطاقة 10$</h2>
-            <div class="price">10$ <span>({{ rate * 10 }} ل.س)</span></div>
-            <button class="btn btn-gold" onclick="orderVisa('10$', 10)">🛒 اطلب الآن</button>
-        </div>
-        
-        <div class="card-visa">
-            <h2>💳 بطاقة 25$</h2>
-            <div class="price">25$ <span>({{ rate * 25 }} ل.س)</span></div>
-            <button class="btn btn-gold" onclick="orderVisa('25$', 25)">🛒 اطلب الآن</button>
-        </div>
-        
-        <div class="card-visa">
-            <h2>💳 بطاقة 50$</h2>
-            <div class="price">50$ <span>({{ rate * 50 }} ل.س)</span></div>
-            <button class="btn btn-gold" onclick="orderVisa('50$', 50)">🛒 اطلب الآن</button>
-        </div>
-        
-        <div class="card-visa">
-            <h2>💳 بطاقة 100$</h2>
-            <div class="price">100$ <span>({{ rate * 100 }} ل.س)</span></div>
-            <button class="btn btn-gold" onclick="orderVisa('100$', 100)">🛒 اطلب الآن</button>
-        </div>
-        
+        <div class="card-visa"><h2>💳 بطاقة 10$</h2><div class="price">10$ <span>({{ rate * 10 }} ل.س)</span></div><button class="btn btn-gold" onclick="orderVisa('10$', 10)">🛒 اطلب الآن</button></div>
+        <div class="card-visa"><h2>💳 بطاقة 25$</h2><div class="price">25$ <span>({{ rate * 25 }} ل.س)</span></div><button class="btn btn-gold" onclick="orderVisa('25$', 25)">🛒 اطلب الآن</button></div>
+        <div class="card-visa"><h2>💳 بطاقة 50$</h2><div class="price">50$ <span>({{ rate * 50 }} ل.س)</span></div><button class="btn btn-gold" onclick="orderVisa('50$', 50)">🛒 اطلب الآن</button></div>
+        <div class="card-visa"><h2>💳 بطاقة 100$</h2><div class="price">100$ <span>({{ rate * 100 }} ل.س)</span></div><button class="btn btn-gold" onclick="orderVisa('100$', 100)">🛒 اطلب الآن</button></div>
         <a href="/" class="back-link">🔙 رجوع للصفحة الرئيسية</a>
     </div>
     <script>
@@ -292,246 +275,4 @@ ADMIN_HTML = """
         input,textarea{width:100%;padding:12px;margin:5px 0;border-radius:10px;border:1px solid #30363d;background:#0d1117;color:#fff;font-size:1em}
         button{padding:15px;background:#58a6ff;border:none;border-radius:10px;color:#fff;font-weight:bold;cursor:pointer;width:100%;margin:5px 0}
         .green{background:#3fb950}.gold{background:#d2991d}.red{background:#f85149}
-        .tabs{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
-        .tab{padding:10px 20px;background:#161b22;border-radius:10px;cursor:pointer;border:1px solid #30363d}
-        .tab.active{background:#58a6ff}
-        .section{display:none}
-        .section.active{display:block}
-        .chat-box{max-height:300px;overflow-y:auto;padding:15px;background:#0d1117;border-radius:10px;margin:10px 0}
-        .msg{margin:8px 0;padding:10px;border-radius:10px;max-width:80%}
-        .msg-user{background:#1a5c2a;margin-right:auto}
-        .msg-admin{background:#1a3a5c;margin-left:auto;text-align:right}
-    </style>
-</head>
-<body>
-    <h1>📋 لوحة تحكم SMSGate</h1>
-    <div class="tabs">
-        <div class="tab active" onclick="showTab('orders')">📝 طلبات الأرقام</div>
-        <div class="tab" onclick="showTab('visa')">💳 طلبات Visa</div>
-        <div class="tab" onclick="showTab('deposits')">💳 الشحن</div>
-        <div class="tab" onclick="showTab('chats')">💬 الدردشات</div>
-    </div>
-    <div id="orders" class="section active"><h2>📝 طلبات الأرقام</h2>
-        {% for o in orders %}
-        <div class="card" style="border-color:{% if o.status == 'accepted' %}#3fb950{% elif o.status == 'rejected' %}#f85149{% else %}#d2991d{% endif %};">
-            <b>🆔 {{ o.id }}</b> | {{ o.time }}<br>👤 {{ o.uid }} | 🌍 {{ o.country }} | 📲 {{ o.service }} | 💰 {{ o.price }}$
-            {% if o.status == 'pending' %}
-            <div style="display:flex;gap:10px;">
-                <form method="POST" action="/admin/accept" style="flex:1;"><input type="hidden" name="id" value="{{ o.id }}"><input name="number" placeholder="الرقم" required><input name="code" placeholder="الكود" required><button class="green">✅ قبول</button></form>
-                <form method="POST" action="/admin/reject" style="flex:1;"><input type="hidden" name="id" value="{{ o.id }}"><button class="red">❌ رفض</button></form>
-            </div>
-            {% elif o.status == 'accepted' %}<p class="green">✅ {{ o.number }} | 🎯 {{ o.code }}</p>
-            {% else %}<p class="red">❌ مرفوض</p>{% endif %}
-        </div>{% endfor %}
-    </div>
-    <div id="visa" class="section"><h2>💳 طلبات Visa</h2>
-        {% for v in visa_orders %}
-        <div class="card" style="border-color:{% if v.status == 'accepted' %}#3fb950{% elif v.status == 'rejected' %}#f85149{% else %}#d2991d{% endif %};">
-            <b>🆔 {{ v.id }}</b> | {{ v.time }}<br>👤 {{ v.uid }} | 💳 {{ v.name }} | 💰 {{ v.price }}$
-            {% if v.status == 'pending' %}
-            <div style="display:flex;gap:10px;">
-                <form method="POST" action="/admin/visa_accept" style="flex:1;"><input type="hidden" name="id" value="{{ v.id }}"><button class="green">✅ قبول</button></form>
-                <form method="POST" action="/admin/visa_reject" style="flex:1;"><input type="hidden" name="id" value="{{ v.id }}"><button class="red">❌ رفض</button></form>
-            </div>
-            {% elif v.status == 'accepted' %}<p class="green">✅ تم التسليم</p>
-            {% else %}<p class="red">❌ مرفوض</p>{% endif %}
-        </div>{% endfor %}
-    </div>
-    <div id="deposits" class="section"><h2>💳 طلبات الشحن</h2>
-        {% for d in deposits %}<div class="card"><b>{{ d.time }}</b><br>👤 {{ d.uid }} | 💰 {{ d.amount }}$<br>{% if d.file %}<img src="/uploads/{{ d.file }}" width="200">{% endif %}<form method="POST" action="/admin/approve"><input type="hidden" name="uid" value="{{ d.uid }}"><input type="hidden" name="amount" value="{{ d.amount }}"><button class="gold">✅ تأكيد الشحن</button></form></div>{% endfor %}
-    </div>
-    <div id="chats" class="section"><h2>💬 الدردشات</h2>
-        {% for uid, msgs in chats.items() %}<div class="card"><b>👤 {{ uid }}</b><div class="chat-box">{% for m in msgs %}<div class="msg {% if m.from == 'user' %}msg-user{% else %}msg-admin{% endif %}"><small>{% if m.from == 'user' %}مستخدم{% else %}أنت{% endif %} | {{ m.time }}</small><br>{{ m.text }}</div>{% endfor %}</div><form method="POST" action="/admin/reply"><input type="hidden" name="uid" value="{{ uid }}"><textarea name="reply" rows="2" placeholder="ردك..."></textarea><button type="submit">📨 إرسال رد</button></form></div>{% endfor %}
-    </div>
-    <p style="margin-top:30px;"><a href="/" style="color:#58a6ff;">🔙 الموقع</a></p>
-    <script>function showTab(t){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));document.getElementById(t).classList.add('active');document.querySelectorAll('.tab').forEach(tb=>tb.classList.remove('active'));event.target.classList.add('active')}</script>
-</body>
-</html>
-"""
-
-@app.route('/')
-def home():
-    return render_template_string(WELCOME, syriatel=SYRIATEL, rate=DOLLAR_RATE)
-
-@app.route('/numbers')
-def numbers():
-    return render_template_string(HTML, syriatel=SYRIATEL, rate=DOLLAR_RATE)
-
-@app.route('/visa')
-def visa():
-    return render_template_string(VISA, syriatel=SYRIATEL, rate=DOLLAR_RATE)
-
-@app.route('/api/new_user')
-def api_new_user():
-    return jsonify({"uid": get_uid()})
-
-@app.route('/api/balance')
-def api_balance():
-    uid = request.args.get('uid')
-    users = load(DB_USERS)
-    return jsonify({"balance": users.get(uid, {}).get("balance", 0)})
-
-@app.route('/api/order')
-def api_order():
-    uid = request.args.get('uid')
-    price = int(request.args.get('price', 5))
-    users = load(DB_USERS)
-    if uid not in users: users[uid] = {"balance": 0}
-    if users[uid]["balance"] < price: return jsonify({"ok": False, "error": "رصيد غير كاف"})
-    users[uid]["balance"] -= price
-    save(DB_USERS, users)
-    oid = datetime.now().strftime("%H%M%S")
-    orders = load(DB_ORDERS)
-    orders.append({"id": oid, "uid": uid, "country": request.args.get('country'), "service": request.args.get('service'), "price": price, "time": datetime.now().strftime("%H:%M"), "number": None, "code": None, "status": "pending"})
-    save(DB_ORDERS, orders)
-    notif = load(DB_NOTIF)
-    if uid not in notif: notif[uid] = []
-    notif[uid].append({"oid": oid, "status": "pending", "read": False})
-    save(DB_NOTIF, notif)
-    return jsonify({"ok": True})
-
-@app.route('/api/visa_order')
-def api_visa_order():
-    uid = request.args.get('uid')
-    name = request.args.get('name')
-    price = int(request.args.get('price', 10))
-    visa_orders = load("visa_orders.json")
-    oid = datetime.now().strftime("%H%M%S")
-    visa_orders.append({"id": oid, "uid": uid, "name": name, "price": price, "time": datetime.now().strftime("%H:%M"), "status": "pending"})
-    save("visa_orders.json", visa_orders)
-    return jsonify({"ok": True})
-
-@app.route('/api/notifications')
-def api_notifications():
-    uid = request.args.get('uid')
-    notif = load(DB_NOTIF)
-    user_notif = notif.get(uid, [])
-    unread = any(not n.get('read', False) for n in user_notif)
-    orders = load(DB_ORDERS)
-    enriched = []
-    for n in user_notif:
-        for o in orders:
-            if o['id'] == n['oid']:
-                enriched.append({**n, "number": o.get('number'), "code": o.get('code')})
-    return jsonify({"notifications": enriched, "unread": unread})
-
-@app.route('/api/notifications/read')
-def api_notifications_read():
-    uid = request.args.get('uid')
-    notif = load(DB_NOTIF)
-    if uid in notif:
-        for n in notif[uid]: n['read'] = True
-        save(DB_NOTIF, notif)
-    return jsonify({"ok": True})
-
-@app.route('/api/chat')
-def api_chat():
-    chats = load(DB_CHATS)
-    return jsonify({"messages": chats.get(request.args.get('uid'), [])})
-
-@app.route('/api/chat/send', methods=['POST'])
-def api_chat_send():
-    data = request.json
-    uid = data['uid']
-    chats = load(DB_CHATS)
-    if uid not in chats: chats[uid] = []
-    chats[uid].append({"from": "user", "text": data['text'], "time": datetime.now().strftime("%H:%M")})
-    save(DB_CHATS, chats)
-    return jsonify({"ok": True})
-
-@app.route('/api/deposit', methods=['POST'])
-def api_deposit():
-    uid = request.form.get('uid')
-    amt = request.form.get('amount')
-    file = request.files.get('proof')
-    fn = None
-    if file:
-        fn = secure_filename(uid + "_" + datetime.now().strftime("%H%M%S") + ".jpg")
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], fn))
-    deposits = load("deposits.json")
-    deposits.append({"uid": uid, "amount": amt, "file": fn, "time": datetime.now().strftime("%H:%M")})
-    save("deposits.json", deposits)
-    return jsonify({"ok": True})
-
-@app.route('/admin')
-def admin():
-    return '<form method="POST" action="/admin/login" style="text-align:center;margin-top:100px;background:#0d1117;color:#fff;padding:50px;"><h2>🔑 دخول المشرف</h2><input type="password" name="pass" placeholder="كلمة المرور" style="padding:15px;font-size:1.2em;width:80%;margin:20px 0;border-radius:10px;"><br><button type="submit" style="padding:15px 40px;background:#58a6ff;border:none;border-radius:10px;color:#fff;font-size:1.2em;">دخول</button></form>'
-
-@app.route('/admin/login', methods=['POST'])
-def admin_login():
-    if request.form.get('pass') == ADMIN_PASS:
-        orders = load(DB_ORDERS)
-        deposits = load("deposits.json")
-        chats = load(DB_CHATS)
-        visa_orders = load("visa_orders.json")
-        return render_template_string(ADMIN_HTML, orders=orders, deposits=deposits, chats=chats, visa_orders=visa_orders)
-    return '<h1>❌ خطأ</h1>'
-
-@app.route('/admin/accept', methods=['POST'])
-def admin_accept():
-    oid = request.form.get('id')
-    orders = load(DB_ORDERS)
-    for o in orders:
-        if o['id'] == oid:
-            o['number'] = request.form.get('number')
-            o['code'] = request.form.get('code')
-            o['status'] = 'accepted'
-    save(DB_ORDERS, orders)
-    return redirect('/admin/login')
-
-@app.route('/admin/reject', methods=['POST'])
-def admin_reject():
-    oid = request.form.get('id')
-    orders = load(DB_ORDERS)
-    for o in orders:
-        if o['id'] == oid:
-            o['status'] = 'rejected'
-    save(DB_ORDERS, orders)
-    return redirect('/admin/login')
-
-@app.route('/admin/visa_accept', methods=['POST'])
-def admin_visa_accept():
-    oid = request.form.get('id')
-    visa_orders = load("visa_orders.json")
-    for v in visa_orders:
-        if v['id'] == oid:
-            v['status'] = 'accepted'
-    save("visa_orders.json", visa_orders)
-    return redirect('/admin/login')
-
-@app.route('/admin/visa_reject', methods=['POST'])
-def admin_visa_reject():
-    oid = request.form.get('id')
-    visa_orders = load("visa_orders.json")
-    for v in visa_orders:
-        if v['id'] == oid:
-            v['status'] = 'rejected'
-    save("visa_orders.json", visa_orders)
-    return redirect('/admin/login')
-
-@app.route('/admin/approve', methods=['POST'])
-def admin_approve():
-    uid = request.form.get('uid')
-    amt = float(request.form.get('amount', 0))
-    users = load(DB_USERS)
-    if uid not in users: users[uid] = {"balance": 0}
-    users[uid]["balance"] += amt
-    save(DB_USERS, users)
-    return redirect('/admin/login')
-
-@app.route('/admin/reply', methods=['POST'])
-def admin_reply():
-    uid = request.form.get('uid')
-    reply = request.form.get('reply')
-    chats = load(DB_CHATS)
-    if uid not in chats: chats[uid] = []
-    chats[uid].append({"from": "admin", "text": reply, "time": datetime.now().strftime("%H:%M")})
-    save(DB_CHATS, chats)
-    return redirect('/admin/login')
-
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=9000, debug=True)
+        .tabs{display:flex;gap
