@@ -114,7 +114,9 @@ HTML = r"""
     <div class="modal" id="chatModal"><div class="modal-content" style="max-width:600px;"><h2>💬 الدردشة مع الدعم</h2><div class="chat-box" id="chatBox"></div><div class="chat-input"><input id="chatInput" placeholder="اكتب رسالتك..."><button class="btn btn-primary" onclick="sendChat()" style="width:auto;">📨</button></div><button class="btn" style="background:#6e7681;margin-top:10px;" onclick="closeChat()">إغلاق</button></div></div>
     <script>
         const RATE={{ rate }};
-        let uid=localStorage.getItem('sms_uid');
+        let uid=localStorage.getItem("sms_uid");
+if(!uid){uid=Math.floor(10000000+Math.random()*90000000);localStorage.setItem("sms_uid",uid);}
+document.getElementById("myId").textContent=uid;
         if(!uid){fetch('/api/new_user').then(r=>r.json()).then(d=>{uid=d.uid;localStorage.setItem('sms_uid',uid);document.getElementById('myId').textContent=uid;loadBalance();checkNotif()})}
         else{document.getElementById('myId').textContent=uid;loadBalance();checkNotif()}
         function showAlert(msg,icon){icon=icon||'⚡';let overlay=document.createElement('div');overlay.className='alert-overlay';overlay.innerHTML='<div class="alert-box"><div class="alert-icon">'+icon+'</div><div class="alert-msg">'+msg+'</div><button class="alert-btn" onclick="this.closest(\'.alert-overlay\').remove()">حسناً 👍</button></div>';document.body.appendChild(overlay)}
