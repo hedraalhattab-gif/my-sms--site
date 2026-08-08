@@ -90,7 +90,8 @@ HTML = r"""
     </style>
 </head>
 <body>
-    <div id="lightningContainer"></div>
+    <div class="stars" id="starsContainer"></div>
+<div id="lightningContainer"></div>
     <div class="rocket" id="rocketShip">🚀</div>
     <button class="mode-btn" onclick="toggleMode()" id="modeToggle">☀️</button>
     <div class="container">
