@@ -43,7 +43,7 @@ HTML = r"""
     <style>
         :root{--bg:#0d1117;--card:#161b22;--text:#e6edf3;--blue:#58a6ff;--green:#3fb950;--gold:#d2991d;--red:#f85149;--msg-user:#1a5c2a;--msg-admin:#1a3a5c}
         *{margin:0;padding:0;box-sizing:border-box}
-        body{background:var(--bg);color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
+        body{background:linear-gradient(135deg,#0d1117,#1a0a2e,#0a1a2e,#1a0a2e,#0d1117);background-size:400% 400%;animation:bgMove 10s ease infinite;color:var(--text);font-family:'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden}
         .lightning{position:fixed;width:2px;background:linear-gradient(to bottom,#58a6ff,transparent);animation:strike 4s infinite;opacity:0;z-index:0;pointer-events:none}
         @keyframes strike{0%,92%,100%{opacity:0;transform:scaleY(0)}93%{opacity:1;transform:scaleY(1)}94%{opacity:0.5}95%{opacity:1;transform:scaleY(1.1)}96%{opacity:0}}
         .rocket{position:fixed;font-size:50px;z-index:10;pointer-events:none;animation:fly 6s ease-in-out infinite}
@@ -83,14 +83,17 @@ HTML = r"""
         .notif-pending{background:#332a0d;border:1px solid var(--gold)}
         .alert-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;display:flex;justify-content:center;align-items:center}
         .alert-box{background:linear-gradient(145deg,#1a1a2e,#16213e);border:2px solid #58a6ff;border-radius:20px;padding:30px;text-align:center;max-width:400px;width:90%;box-shadow:0 0 40px rgba(88,166,255,0.4),0 0 80px rgba(88,166,255,0.2);animation:glow 2s infinite;color:#e6edf3}
-        @keyframes glow{0%,100%{box-shadow:0 0 40px rgba(88,166,255,0.4),0 0 80px rgba(88,166,255,0.2)}50%{box-shadow:0 0 60px rgba(88,166,255,0.6),0 0 100px rgba(88,166,255,0.4)}}
+        @keyframes bgMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes glow{0%,100%{box-shadow:0 0 40px rgba(88,166,255,0.4),0 0 80px rgba(88,166,255,0.2)}50%{box-shadow:0 0 60px rgba(88,166,255,0.6),0 0 100px rgba(88,166,255,0.4)}}
         .alert-icon{font-size:3em;margin-bottom:15px}
         .alert-msg{font-size:1.3em;margin:10px 0;line-height:1.6}
         .alert-btn{background:linear-gradient(135deg,#1a6b9c,#58a6ff);border:none;padding:12px 30px;border-radius:25px;color:#fff;font-size:1.1em;cursor:pointer;margin-top:15px}
-    </style>
+    .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite}@keyframes twinkle{0%,100%{opacity:0.2;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}.btn:hover{box-shadow:0 0 30px rgba(88,166,255,0.6)!important;transform:scale(1.03)!important}
+</style>
 </head>
 <body>
     <div class="stars" id="starsContainer"></div>
+<div class="stars" id="starsContainer"></div>
 <div id="lightningContainer"></div>
     <div class="rocket" id="rocketShip">🚀</div>
     <button class="mode-btn" onclick="toggleMode()" id="modeToggle">☀️</button>
@@ -122,7 +125,8 @@ document.getElementById("myId").textContent=uid;
         function showAlert(msg,icon){icon=icon||'⚡';let overlay=document.createElement('div');overlay.className='alert-overlay';overlay.innerHTML='<div class="alert-box"><div class="alert-icon">'+icon+'</div><div class="alert-msg">'+msg+'</div><button class="alert-btn" onclick="this.closest(\'.alert-overlay\').remove()">حسناً 👍</button></div>';document.body.appendChild(overlay)}
         function clickFx(){try{const a=new AudioContext(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=900;o.type='sine';g.gain.setValueAtTime(0.15,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.08);o.start();o.stop(a.currentTime+0.08)}catch(e){}}
         document.addEventListener('click',e=>{if(['BUTTON','A','SELECT'].includes(e.target.tagName))clickFx()});
-        const lc2=document.getElementById('lightningContainer');
+        for(let i=0;i<70;i++){const s=document.createElement("div");s.className="star";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.width=Math.random()*3+1+"px";s.style.height=s.style.width;s.style.animationDelay=Math.random()*3+"s";document.getElementById("starsContainer").appendChild(s)}
+const lc2=document.getElementById('lightningContainer');
         for(let i=0;i<8;i++){const b=document.createElement('div');b.className='lightning';b.style.left=(Math.random()*90+5)+'%';b.style.height=(Math.random()*50+30)+'%';b.style.animationDelay=(Math.random()*5)+'s';lc2.appendChild(b)}
         const ship=document.getElementById('rocketShip');
         function launch(){ship.style.animation='none';ship.offsetHeight;ship.style.animation='fly 6s ease-in-out';setTimeout(launch,6000)}launch();
@@ -170,7 +174,8 @@ ADMIN_HTML = """
         .msg{margin:8px 0;padding:10px;border-radius:10px;max-width:80%}
         .msg-user{background:#1a5c2a;margin-right:auto}
         .msg-admin{background:#1a3a5c;margin-left:auto;text-align:right}
-    </style>
+    .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle 3s infinite}@keyframes twinkle{0%,100%{opacity:0.2;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}.btn:hover{box-shadow:0 0 30px rgba(88,166,255,0.6)!important;transform:scale(1.03)!important}
+</style>
 </head>
 <body>
     <h1>📋 لوحة تحكم SMSGate</h1>
