@@ -255,7 +255,6 @@ VISA = """
             <h1>Visa Card</h1>
             <p style="color:#8b949e;font-size:1.1em;">بطاقة فيزا للشراء أونلاين - صالحة لمدة 5 سنوات</p>
         </div>
-        
         <div class="visa-card">
             <img src="https://img.icons8.com/color/96/visa.png" alt="Visa">
             <h2>بطاقة Visa الذهبية</h2>
@@ -266,57 +265,39 @@ VISA = """
                 <span>✅</span> تستخدم للشراء أونلاين<br>
                 <span>✅</span> آمنة ومضمونة 100%
             </div>
-            <button class="btn btn-gold" onclick="openVisaModal()">🛒 اطلب الآن</button>
+            <button class="btn btn-gold" onclick="document.getElementById('visaModal').style.display='flex'">🛒 اطلب الآن</button>
         </div>
-        
         <a href="/" class="back-link">🔙 رجوع إلى قائمة الخدمات</a>
     </div>
-    
     <div class="modal-visa" id="visaModal">
         <div class="modal-visa-content">
             <h2>💳 اختر نوع الشراء</h2>
             <button class="btn btn-gold" onclick="buyEmpty()">🪪 شراء البطاقة فاضية (15$)</button>
-            <button class="btn btn-outline" onclick="showAmountInput()">💰 شراء البطاقة مع رصيد</button>
+            <button class="btn btn-outline" onclick="document.getElementById('amountSection').style.display='block'">💰 شراء البطاقة مع رصيد</button>
             <div id="amountSection" style="display:none;">
                 <input type="number" id="visaAmount" placeholder="أدخل المبلغ الذي تريد شحنه ($)" oninput="updateTotal()">
                 <div class="total-display">الإجمالي: <span id="totalPrice">15$</span></div>
                 <button class="btn btn-gold" onclick="buyWithBalance()">💳 ادفع <span id="totalBtn">15$</span></button>
             </div>
-            <button class="btn" style="background:#6e7681;margin-top:10px;" onclick="closeVisaModal()">إلغاء</button>
+            <button class="btn" style="background:#6e7681;margin-top:10px;" onclick="document.getElementById('visaModal').style.display='none';document.getElementById('amountSection').style.display='none'">إلغاء</button>
         </div>
     </div>
-    
     <script>
         for(let i=0;i<70;i++){const s=document.createElement("div");s.className="star";s.style.left=Math.random()*100+"%";s.style.top=Math.random()*100+"%";s.style.width=Math.random()*3+1+"px";s.style.height=s.style.width;s.style.animationDelay=Math.random()*3+"s";document.getElementById("starsContainer").appendChild(s)}
         function showAlert(msg,icon){icon=icon||'💳';let overlay=document.createElement('div');overlay.className='alert-overlay';overlay.innerHTML='<div class="alert-box"><div class="alert-icon">'+icon+'</div><div class="alert-msg">'+msg+'</div><button class="alert-btn" onclick="this.closest(\'.alert-overlay\').remove()">حسناً 👍</button></div>';document.body.appendChild(overlay)}
-        
-        function openVisaModal(){document.getElementById('visaModal').style.display='flex'}
-        function closeVisaModal(){document.getElementById('visaModal').style.display='none';document.getElementById('amountSection').style.display='none'}
-        function showAmountInput(){document.getElementById('amountSection').style.display='block'}
-        function updateTotal(){
-            let amt=parseInt(document.getElementById('visaAmount').value)||0;
-            let total=15+amt;
-            document.getElementById('totalPrice').textContent=total+'$';
-            document.getElementById('totalBtn').textContent=total+'$';
-        }
-        
+        function updateTotal(){let amt=parseInt(document.getElementById('visaAmount').value)||0;let total=15+amt;document.getElementById('totalPrice').textContent=total+'$';document.getElementById('totalBtn').textContent=total+'$'}
         function buyEmpty(){
-            let uid=localStorage.getItem('sms_uid');
-            if(!uid){uid=Math.floor(10000000+Math.random()*90000000);localStorage.setItem('sms_uid',uid)}
+            let uid=localStorage.getItem('sms_uid');if(!uid){uid=Math.floor(10000000+Math.random()*90000000);localStorage.setItem('sms_uid',uid)}
             fetch(`/api/visa_order?uid=${uid}&name=Visa15&price=15&amount=0`).then(r=>r.json()).then(d=>{
-                if(d.ok){showAlert('✅ تم تقديم طلبك لبطاقة Visa فاضية (15$)!<br><br>انتظر الموافقة 💳','🎉');closeVisaModal()}
+                if(d.ok){showAlert('✅ تم تقديم طلبك لبطاقة Visa فاضية (15$)!<br><br>انتظر الموافقة 💳','🎉');document.getElementById('visaModal').style.display='none'}
                 else{showAlert('❌ '+d.error,'⚠️')}
             });
         }
-        
         function buyWithBalance(){
-            let amt=parseInt(document.getElementById('visaAmount').value)||0;
-            if(amt<=0){showAlert('⚠️ الرجاء إدخال المبلغ الذي تريد شحنه','📋');return}
-            let total=15+amt;
-            let uid=localStorage.getItem('sms_uid');
-            if(!uid){uid=Math.floor(10000000+Math.random()*90000000);localStorage.setItem('sms_uid',uid)}
+            let amt=parseInt(document.getElementById('visaAmount').value)||0;if(amt<=0){showAlert('⚠️ الرجاء إدخال المبلغ الذي تريد شحنه','📋');return}
+            let total=15+amt;let uid=localStorage.getItem('sms_uid');if(!uid){uid=Math.floor(10000000+Math.random()*90000000);localStorage.setItem('sms_uid',uid)}
             fetch(`/api/visa_order?uid=${uid}&name=Visa15&price=15&amount=${amt}`).then(r=>r.json()).then(d=>{
-                if(d.ok){showAlert('✅ تم تقديم طلبك لبطاقة Visa مع رصيد '+amt+'$!<br><br>الإجمالي: '+total+'$<br>انتظر الموافقة 💳','🎉');closeVisaModal()}
+                if(d.ok){showAlert('✅ تم تقديم طلبك لبطاقة Visa مع رصيد '+amt+'$!<br><br>الإجمالي: '+total+'$<br>انتظر الموافقة 💳','🎉');document.getElementById('visaModal').style.display='none';document.getElementById('amountSection').style.display='none'}
                 else{showAlert('❌ '+d.error,'⚠️')}
             });
         }
